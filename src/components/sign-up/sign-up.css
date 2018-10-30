@@ -1,0 +1,41 @@
+.layout {
+    width: auto;
+    display: block;
+    margin-left: 25vw;
+    margin-right: 25vw;
+    margin-top: 2rem;
+}
+
+.paper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form {
+    width: 100%;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-bottom: 3rem;
+}
+
+.avatar {
+    margin-top: -1rem;
+}
+
+.new-account {
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
+    text-decoration: none !important;
+}
+
+.btn {
+    margin-top: 2rem !important;
+}
+
+@media (max-width: 550px) {
+    .layout {
+        margin-left: 10vw;
+        margin-right: 10vw;
+    }
+}

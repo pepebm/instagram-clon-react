@@ -18,5 +18,5 @@ const auth = firebase.auth();
 
 // TODO: export database with same logic?
 export {
-    auth,
+    auth
 };
