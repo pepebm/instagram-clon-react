@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import './home.css';
+import withAuthorization from '../withAuthorization';
 
 import Typography from '@material-ui/core/Typography';
 
 
+const authCondition = (authUser) => !!authUser;
 class Home extends Component { 
     render(){
         return(
@@ -14,4 +16,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default withAuthorization(authCondition)(Home);

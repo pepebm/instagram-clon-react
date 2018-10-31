@@ -1,10 +1,26 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import './profile.css';
+import AuthUserContext from '../AuthUserContext';
+import withAuthorization from '../withAuthorization';
 
-class Profile extends Component { 
+
+const authCondition = (authUser) => !!authUser;
+class Profile extends Component {
     render(){
-        return;
+        return(
+            <AuthUserContext.Consumer>
+                {
+                    authUser => 
+                        <div>
+                            <ul>
+                                <li>Account: {authUser.email}</li>
+                                <li>ID: {authUser.UID}</li>
+                            </ul>
+                        </div>
+                }
+            </AuthUserContext.Consumer>
+        );
     }
 }
 
-export default Profile;
+export default withAuthorization(authCondition)(Profile);

@@ -5,9 +5,8 @@ import {
 } from 'react-router-dom';
 
 import './App.css';
-import withAuthorization from './withAuthorization';
+import withAuthentication from './withAuthentication';
 import * as routes from '../constants/routes';
-import Forgot from './forgot/forgot';
 import Home from './home/home';
 import Landing from './landing/landing';
 import Navigation from './nav/navigation';
@@ -33,10 +32,6 @@ const App = () =>
               component={Signin}
             />
             <Route
-              exact path={routes.PASSWORD_FORGET}
-              component={Forgot}
-            />
-            <Route
               exact path={routes.HOME}
               component={Home}
             />
@@ -47,4 +42,4 @@ const App = () =>
         </div>
       </Router>
 
-export default withAuthorization(App);
+export default withAuthentication(App);
