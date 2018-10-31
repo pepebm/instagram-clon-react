@@ -13,6 +13,7 @@ import Navigation from './nav/navigation';
 import Profile from './profile/profile';
 import Signin from './sign-in/sign-in';
 import Singup from './sign-up/sign-up';
+import AddPost from './add-post/addPost';
 
 
 const App = () =>
@@ -39,6 +40,7 @@ const App = () =>
               exact path={routes.ACCOUNT}
               component={Profile}
             />
+            <AddPost/>
         </div>
       </Router>
 
