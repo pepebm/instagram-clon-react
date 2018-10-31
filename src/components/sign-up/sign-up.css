@@ -33,6 +33,11 @@
     margin-top: 2rem !important;
 }
 
+.half-size-input {
+    width: 50%;
+}
+
+
 @media (max-width: 550px) {
     .layout {
         margin-left: 10vw;

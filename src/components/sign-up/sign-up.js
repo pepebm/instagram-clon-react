@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 
 import * as routes from '../../constants/routes';
-import { auth } from '../../firebase/index';
+import { auth, userDB } from '../../firebase/index';
 import './sign-up.css';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -20,6 +20,8 @@ class Signup extends Component {
     constructor(props){
         super(props);
         this.state = {
+            name: '',
+            lastName: '',
             username: '',
             email: '',
             password: '',
@@ -31,15 +33,23 @@ class Signup extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         const {
+            name,
+            lastName,
+            username,
             email,
             password,
         } = this.state;
         const {
             history
         } = this.props;
+        // Create a valid login for the user
         auth.createUser(email, password)
             .then(usr => {
-                history.push(routes.HOME);
+                // Save the user un the real time db
+                userDB.createUserInDatabase(usr.user.uid, name, lastName, username, email)
+                    .then(history.push(routes.HOME))
+                    .catch(err => this.setState(byPropKey('error', err)))
+                ;
             }, err => {
                 this.setState(byPropKey('error', err));
             })
@@ -47,6 +57,8 @@ class Signup extends Component {
 
     render(){
         const {
+            name,
+            lastName,
             username,
             email,
             password,
@@ -57,6 +69,8 @@ class Signup extends Component {
         const isInvalid = password !== cpassword 
             || password === ''
             || email === ''
+            || name === ''
+            || lastName === ''
             || username === ''
         ;
         
@@ -71,17 +85,40 @@ class Signup extends Component {
                         New user
                     </Typography>
                     <form className='form' onSubmit={this.onSubmit}>
-                        <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="email">Username</InputLabel>
+                        <FormControl margin="normal" required className="half-size-input">
+                            <InputLabel htmlFor="name">First Name</InputLabel>
                             <Input 
-                                id="username" 
-                                value={username}
+                                id="name" 
+                                value={name}
                                 onChange = {
-                                    event => this.setState(byPropKey('username', event.target.value))
+                                    event => this.setState(byPropKey('name', event.target.value))
                                 }
                                 name="name" 
                                 type="text" 
                                 autoFocus 
+                            />
+                        </FormControl>
+                        <FormControl margin="normal" required className="half-size-input">
+                            <InputLabel htmlFor="lastName">Last Name</InputLabel>
+                            <Input 
+                                id="lastName" 
+                                value={lastName}
+                                onChange = {
+                                    event => this.setState(byPropKey('lastName', event.target.value))
+                                }
+                                name="name" 
+                                type="text" 
+                            />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <Input 
+                                id="username" 
+                                name="username"
+                                value={username}
+                                onChange = {
+                                    event => this.setState(byPropKey('username', event.target.value))
+                                }
                             />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>

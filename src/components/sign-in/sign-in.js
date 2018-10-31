@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './sign-in.css';
-import { Link, withRouter } from 'react-router-dom';
-
+import { auth } from '../../firebase/index';
 import * as routes from '../../constants/routes';
 
+import { Link, withRouter } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,7 +13,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { auth } from '../../firebase/index';
 
 const byPropKey = (propertyName, value) => () => ({
     [propertyName]: value,
