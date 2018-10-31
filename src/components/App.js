@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom';
-import { firebase } from '../firebase/index';
 
 import './App.css';
+import withAuthorization from './withAuthorization';
 import * as routes from '../constants/routes';
 import Forgot from './forgot/forgot';
 import Home from './home/home';
@@ -16,25 +16,10 @@ import Signin from './sign-in/sign-in';
 import Singup from './sign-up/sign-up';
 
 
-class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      authUser: null
-    };
-  }
-
-  componentDidMount() {
-    firebase.auth.onAuthStateChanged(authUser => {
-      authUser ? this.setState({ authUser }) : this.setState({ authUser: null });
-    });
-  }
-  
-  render() {
-    return (
+const App = () =>
       <Router>
         <div>
-            <Navigation authUser={this.state.authUser} />
+            <Navigation />
             <Route
               exact path={routes.LANDING}
               component={Landing}
@@ -61,9 +46,5 @@ class App extends Component {
             />
         </div>
       </Router>
-    );
-  }
-  
-}
 
-export default App;
+export default withAuthorization(App);

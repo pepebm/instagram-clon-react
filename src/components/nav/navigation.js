@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SignOut from '../sign-out/sign-out';
-import * as routes from '../../constants/routes';
-
-import './navigation.css';
-
+import { Toolbar } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
-import { Toolbar } from '@material-ui/core';
+
+import SignOut from '../sign-out/sign-out';
+import * as routes from '../../constants/routes';
+import AuthUserContext from '../AuthUserContext';
+import './navigation.css';
 
 const NavigationAuth = () =>
     <AppBar position="static">
@@ -37,9 +37,9 @@ const NavigationNonAuth = () =>
         </Toolbar>
     </AppBar>
 
-const Navigation = ({ authUser }) => 
-    <div>
-        { authUser ? <NavigationAuth /> : <NavigationNonAuth /> }
-    </div>
+const Navigation = () => 
+    <AuthUserContext.Consumer>
+        { authUser => authUser ? <NavigationAuth/> : <NavigationNonAuth/> }
+    </AuthUserContext.Consumer>
 
 export default Navigation;
