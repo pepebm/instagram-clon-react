@@ -3,5 +3,10 @@
 }
 
 .nav-title {
-    color: white !important;
+    color: grey !important;
+}
+
+.logo {
+    width: 8rem;
+    margin-top: 0.5rem;
 }

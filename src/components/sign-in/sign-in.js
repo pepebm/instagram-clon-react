@@ -11,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import LockIcon from '@material-ui/icons/LockOutlined';
+import FiberNewIcon from '@material-ui/icons/FiberNew';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
@@ -96,7 +97,7 @@ class Signin extends Component {
                             <Button
                                 color="secondary"
                                 className="new-account" >
-                            Create account
+                                <FiberNewIcon/> Create account
                             </Button>
                         </Link>
                         <Button
@@ -104,9 +105,8 @@ class Signin extends Component {
                             fullWidth
                             variant="contained"
                             color="primary"
-                            disabled={isInvalid}
-                        >
-                        Enter
+                            disabled={isInvalid}>
+                            Enter
                         </Button>
                         { error && <p>{error.message}</p> }
                     </form>

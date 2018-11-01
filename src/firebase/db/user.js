@@ -11,6 +11,8 @@ export const createUserInDatabase = (id, firstname, lastname, username, email) =
 
 export const getUsers = () => db.ref('users').once('value');
 
-export const addFriend = (id, friendId) => {
-    
-};
+export const addFriend = (id, friendId) =>
+    db.ref(`users/${id}/friends`).push({
+        userId: friendId
+    });
+

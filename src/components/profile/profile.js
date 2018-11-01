@@ -14,7 +14,7 @@ class Profile extends Component {
                         <div>
                             <ul>
                                 <li>Account: {authUser.email}</li>
-                                <li>ID: {authUser.UID}</li>
+                                <li>ID: {authUser.uid}</li>
                             </ul>
                         </div>
                 }
