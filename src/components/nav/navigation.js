@@ -23,6 +23,9 @@ const NavigationAuth = ({ authUser }) =>
             </Typography>
             <Link to={routes.ACCOUNT}>
                 <IconButton className='grow nav-title'>
+                    <Typography variant="subtitle2" style={{marginRight: '0.5rem'}}>
+                        {authUser.username}
+                    </Typography>
                     <AccountCircleIcon/>
                 </IconButton>
             </Link>

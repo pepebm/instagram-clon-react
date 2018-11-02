@@ -20,42 +20,35 @@ class Home extends Component {
             postList: []
         };
     }
-
-    componentDidMount() {
-        db.ref().child('posts').on('value', snapshot => this.renderData(snapshot.val()));
-        const postRef = db.ref().child('posts');
-        postRef.on('child_added', snap => {
-            const post = snap.val();
-            const postList = this.state.postList;
-            this.setState(byPropKey(
-                'postList', 
-                [...postList, post].sort((a, b) => {
-                    a = new Date(a.createdAt);
-                    b = new Date(b.createdAt);
-                    return a > b ? -1 : a < b ? 1 : 0;
-                }))
-            );
-        });
-    }
     
     componentWillUnmount() {
         this.setState(byPropKey('postList', []))
     }
 
-    renderData(data) {
-        let newArray = [];
-        for (const p in data) {
-            newArray.push(data[p]);
-        }
-        console.log('hi');
-        this.setState(byPropKey(
-            'postList', 
-            newArray.sort((a, b) => {
-                    a = new Date(a.createdAt);
-                    b = new Date(b.createdAt);
-                    return a > b ? -1 : a < b ? 1 : 0;
-                }))
-            );
+    renderData(data, id) {
+        db.ref(`users/${id}`).on('value',
+            f => {
+                let friendsArr = [id];
+                let newArray = [];
+                let friends = f.val().friends;
+                if (friends !== null) {
+                    for (const fr in friends) {
+                        friendsArr.push(friends[fr].userId);
+                    }
+                }
+                for (const p in data) {
+                    newArray.push(data[p]);
+                }
+                newArray = newArray.filter(p => friendsArr.includes(p.userId));
+                this.setState(byPropKey(
+                    'postList',
+                    newArray.sort((a, b) => {
+                        a = new Date(a.createdAt);
+                        b = new Date(b.createdAt);
+                        return a > b ? -1 : a < b ? 1 : 0;
+                    })));
+            },
+            err => console.log(err));        
     }
 
     render(){
@@ -77,6 +70,9 @@ class Home extends Component {
                     {authUser => {
                         if (user !== authUser){
                             this.setState(byPropKey('user', authUser));
+                            db.ref().child('posts').on('value', 
+                                snapshot => this.renderData(snapshot.val(), authUser.uid)
+                            );
                         }
                     }}
                 </AuthUserContext.Consumer>

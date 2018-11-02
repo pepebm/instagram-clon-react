@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { firebase } from '../firebase/index';
+import { db } from '../firebase/init';
 import AuthUserContext from './AuthUserContext';
 
 // HOC
@@ -15,7 +16,14 @@ const withAuthentication = (Component) => {
 
         componentDidMount() {
             firebase.auth.onAuthStateChanged(authUser => {
-                authUser ? this.setState({ authUser }) : this.setState({authUser: null});
+                if (authUser) {
+                    db.ref(`users/${authUser.uid}`).on(
+                        'value',
+                        snapshot => this.setState({ authUser: {uid: authUser.uid, ...snapshot.val()}}),
+                        (e) => console.log(e));
+                } else {
+                    this.setState({authUser: null});
+                }
             });
         }
 
