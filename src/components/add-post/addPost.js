@@ -86,10 +86,10 @@ class AddPost extends Component {
                         </FormControl>
                         { error && <DialogContentText>{error.message}</DialogContentText> }
                         <DialogActions>
-                            <Button onClick={this.resetState} color="primary">
+                            <Button onClick={this.resetState} color="secondary">
                                 Cancel
                             </Button>
-                            <Button onClick={this.sendRequest.bind(this)} color="primary" disabled={isInvalid}>
+                            <Button onClick={this.sendRequest.bind(this)} color="secondary" disabled={isInvalid}>
                                 Post
                             </Button>
                         </DialogActions>

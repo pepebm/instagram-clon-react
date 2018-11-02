@@ -1,5 +1,5 @@
 .action-btn{
-    position: absolute !important;
+    position: fixed !important;
     right: 1rem;
     bottom: 1rem;
 }

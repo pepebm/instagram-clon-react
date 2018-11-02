@@ -1,0 +1,12 @@
+.card-container {
+    margin-right: 25vw;
+    margin-left: 25vw;
+    margin-top: 3rem;
+}
+
+@media(max-width: 750px) {
+    .card-container {
+        margin-right: 10vw;
+        margin-left: 10vw;
+    }
+}
