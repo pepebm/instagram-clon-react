@@ -13,6 +13,7 @@ import Profile from './profile/profile';
 import Signin from './sign-in/sign-in';
 import Singup from './sign-up/sign-up';
 import AddPost from './add-post/addPost';
+import AddFriend from './add-friend/addFriend';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
@@ -47,6 +48,7 @@ const App = () =>
                 exact path={routes.ACCOUNT}
                 component={Profile}
               />
+              <AddFriend/>
               <AddPost/>
             </MuiThemeProvider>
         </div>

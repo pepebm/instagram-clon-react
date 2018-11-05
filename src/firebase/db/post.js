@@ -29,22 +29,3 @@ export const createPost = (id, title, image) => {
             });
     });
 };
-
-export const getPosts = (id) => {
-    let result = [];
-    let friends = [];
-    return new Promise((resolve, reject) => {
-        db.ref(`users/${id}/friends`).on('value', 
-                f => {
-                    friends.concat(f);
-                    return db.ref('posts').orderByChild('date').once('value');
-                },
-                err => reject(err))
-            .then(posts => {
-                debugger;
-                result.concat(posts.filter(p => friends.includes(p.userId)));
-                resolve(result);
-            })
-            .catch(err => reject(err));
-    });
-};
