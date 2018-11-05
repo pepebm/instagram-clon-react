@@ -16,7 +16,7 @@ import logo from './logo.png';
 const NavigationAuth = ({ authUser }) =>
     <AppBar position="sticky">
         <Toolbar>
-            <Typography variant="headline" className='grow nav-title'>
+            <Typography variant="h5" className='grow nav-title'>
                 <Link to={routes.HOME}>
                     <img src={logo} alt="Instagram" className="logo"/>
                 </Link>
@@ -38,7 +38,7 @@ const NavigationAuth = ({ authUser }) =>
 const NavigationNonAuth = () =>
     <AppBar position="static">
         <Toolbar>
-            <Typography variant="headline" color="textPrimary" className='grow nav-title'>
+            <Typography variant="h5" color="textPrimary" className='grow nav-title'>
                 <Link to={routes.SIGN_IN}>
                     <img src={logo} alt="Instagram" className="logo"/>
                 </Link>

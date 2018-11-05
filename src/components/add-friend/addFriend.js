@@ -17,7 +17,9 @@ import {
     IconButton,
     TextField,
     Card,
-    CardHeader
+    CardHeader,
+    Tooltip,
+    Zoom
 } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import SearchIcon from '@material-ui/icons/Search';
@@ -42,7 +44,9 @@ class AddFriend extends Component {
 
     componentDidMount(){
         userDB.getUsers()
-            .then(snapshot => this.setState(byPropKey('userList', snapshot.val())))
+            .then(snapshot => 
+                this.setState(byPropKey('userList', snapshot.val()))
+            )
             .catch(err => {
                 console.log(err);
                 this.resetState();
@@ -71,7 +75,6 @@ class AddFriend extends Component {
     }
 
     createRelation(currenId, friendId) {
-        debugger;
         userDB.addFriend(currenId, friendId)
             .then(this.resetState)
             .catch(err => console.log(err));
@@ -142,16 +145,23 @@ class AddFriend extends Component {
                         </DialogActions>
                     </DialogContent>
                 </Dialog>
-                <Button
-                    variant="fab" 
-                    color="primary" 
-                    aria-label="Follow"
-                    className="action-btn-2"
-                    onClick={
-                        e => this.setState(byPropKey('openDialog', true))
-                    }>
-                    <PersonAddIcon/>
-                </Button>
+                <Tooltip 
+                    TransitionComponent={Zoom} 
+                    title="Add new friend"
+                    placement="left"
+                    disableFocusListener
+                    disableTouchListener>
+                    <Button
+                        variant="fab" 
+                        color="primary" 
+                        aria-label="Follow"
+                        className="action-btn-2"
+                        onClick={
+                            e => this.setState(byPropKey('openDialog', true))
+                        }>
+                        <PersonAddIcon/>
+                    </Button>
+                </Tooltip>
             </div>
         );
     }

@@ -14,7 +14,9 @@ import {
     DialogContentText,
     FormControl,
     Input,
-    InputLabel
+    InputLabel,
+    Tooltip,
+    Zoom
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -95,16 +97,23 @@ class AddPost extends Component {
                         </DialogActions>
                     </DialogContent>
                 </Dialog>
-                <Button
-                    variant="fab" 
-                    color="primary" 
-                    aria-label="Add post"
-                    className="action-btn"
-                    onClick={
-                        e => this.setState(byPropKey('openDialog', true))
-                    }>
-                    <AddIcon/>
-                </Button>
+                <Tooltip 
+                    TransitionComponent={Zoom} 
+                    title="Add new post"
+                    placement="left"
+                    disableFocusListener
+                    disableTouchListener>
+                    <Button
+                        variant="fab" 
+                        color="primary" 
+                        aria-label="Add post"
+                        className="action-btn"
+                        onClick={
+                            e => this.setState(byPropKey('openDialog', true))
+                        }>
+                        <AddIcon/>
+                    </Button>
+                </Tooltip>
             </div>
         );
     }

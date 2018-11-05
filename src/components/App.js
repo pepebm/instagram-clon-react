@@ -14,23 +14,15 @@ import Signin from './sign-in/sign-in';
 import Singup from './sign-up/sign-up';
 import AddPost from './add-post/addPost';
 import AddFriend from './add-friend/addFriend';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import Theme from './AppTheme';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#ffffff'
-    },
-    secondary: {
-      main: '#000000'
-    }
-  }
-});
+
 
 const App = () =>
       <Router>
         <div>
-            <MuiThemeProvider theme={theme}>
+            <MuiThemeProvider theme={Theme}>
               <Navigation />
               <Route
                 exact path={routes.SIGN_UP}

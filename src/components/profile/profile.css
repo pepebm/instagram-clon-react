@@ -1,0 +1,12 @@
+.list-cont {
+    margin-right: 20vw;
+    margin-left: 20vw;
+    margin-bottom: 3rem;
+}
+
+@media(max-width: 750px) {
+    .list-cont {
+        margin-right: 10vw;
+        margin-left: 10vw;
+    }
+}

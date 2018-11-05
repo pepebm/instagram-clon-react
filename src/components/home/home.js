@@ -10,6 +10,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import LockIcon from '@material-ui/icons/Lock';
 import LoadingScreen from 'react-loading-screen';
 
 
@@ -28,11 +29,12 @@ class Home extends Component {
         db.ref().child('posts').on('child_removed',
             snapshot => {
                 this.setState(byPropKey('isLoading', true));
-                const post = snapshot.val();
+                const postDate = snapshot.val().createdAt;
                 const postList = this.state.postList;
                 postList.forEach((p, idx) => {
-                    if(p.createdAt === post.createdAt) {
+                    if (p.createdAt === postDate) {
                         this.setState(byPropKey('postList', {...postList.pop(idx)}))
+                        return;
                     }
                 });
                 this.setState(byPropKey('isLoading', false));
@@ -88,10 +90,33 @@ class Home extends Component {
     }
 
     deletePost(id) {
-        console.log(id);
         db.ref(`posts/${id}`).remove()
             .then(console.log("Delete successful"))
             .catch(err => console.log(err));
+    }
+
+    deleteWithPermission(post) {
+        const { user } = this.state;
+        if (user.uid === post.userId){
+            return (
+                <IconButton
+                    aria-label="Delete post"
+                    aria-expanded="true"
+                    onClick={
+                        e => this.deletePost(`${post.userId}-${post.createdAt}`)
+                    }>
+                    <RemoveCircleOutlineIcon/>
+                </IconButton>
+            );
+        } else {
+            return (
+                <IconButton disabled
+                    aria-label="You do not own this post"
+                    aria-expanded="true">
+                    <LockIcon/>
+                </IconButton>
+            );
+        }
     }
 
     render(){
@@ -101,16 +126,7 @@ class Home extends Component {
                 <CardHeader
                     title={post.title}
                     subheader={this.formatDate(post.createdAt)}
-                    action={
-                        <IconButton
-                            aria-label="Delete post"
-                            aria-expanded="Delete post"
-                            onClick={
-                                e => this.deletePost(`${post.userId}-${post.createdAt}`)
-                            }>
-                            <RemoveCircleOutlineIcon/>
-                        </IconButton>
-                    }/>
+                    action={this.deleteWithPermission(post)}/>
                 <CardMedia
                     title=""
                     style={{height: 0, paddingTop: '56.25%'}}
