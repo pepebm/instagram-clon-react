@@ -7,11 +7,13 @@ import logo from '../nav/logo.png';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import LockIcon from '@material-ui/icons/Lock';
 import LoadingScreen from 'react-loading-screen';
+import { Typography } from '@material-ui/core';
 
 
 
@@ -24,8 +26,14 @@ class Home extends Component {
         this.state = {
             user: null,
             postList: [],
+            userList: [],
             isLoading: false
         };
+    }
+
+    componentWillMount() {
+        this.setState(byPropKey('isLoading', true));
+        // WebHook: Remove post from current list
         db.ref().child('posts').on('child_removed',
             snapshot => {
                 this.setState(byPropKey('isLoading', true));
@@ -33,21 +41,28 @@ class Home extends Component {
                 const postList = this.state.postList;
                 postList.forEach((p, idx) => {
                     if (p.createdAt === postDate) {
-                        this.setState(byPropKey('postList', {...postList.pop(idx)}))
+                        this.setState(byPropKey('postList', { ...postList.pop(idx)}))
                         return;
                     }
                 });
                 this.setState(byPropKey('isLoading', false));
             }
         );
+        // Not WebHook
+        db.ref('users').once('value')
+            .then(snapshot =>
+                this.setState(byPropKey('userList', this.getArr(snapshot.val())))
+            )
+            .then(() => this.setState((byPropKey('isLoading', false))))
+            .catch(err => console.log(err));
     }
     
     componentWillUnmount() {
         this.setState(byPropKey('postList', []));
+        this.setState(byPropKey('userList', []));
     }
 
     renderData(data, id) {
-        this.setState(byPropKey('isLoading', true));
         db.ref(`users/${id}`).on('value',
             f => {
                 let friendsArr = [id];
@@ -74,7 +89,13 @@ class Home extends Component {
             err => {
                 console.log(err)
                 this.setState(byPropKey('isLoading', false));
-            });        
+            });
+    }
+
+    getArr = data => {
+        let arr = [];
+        for (const d in data) arr.push({id: d, ...data[d]});
+        return arr;
     }
 
     formatDate(timestamp) {
@@ -119,20 +140,37 @@ class Home extends Component {
         }
     }
 
+    list() {
+        const { postList, userList } = this.state;
+        return postList.map((post, idx) => {
+                let usr = "";
+                try {
+                    usr =  userList.find(u => u.id === post.userId).username;
+                } catch (error) {
+                    usr = "Loading username...";
+                }
+                return (
+                    <Card key={`${post.userId}-${idx}`} className="card-container">
+                        <CardHeader
+                            title={post.title}
+                            subheader={usr}
+                            action={this.deleteWithPermission(post)}/>
+                        <CardMedia
+                            title=""
+                            style={{height: 0, paddingTop: '56.25%'}}
+                            image={post.image}/>
+                        <CardContent>
+                            <Typography component="p">
+                                {this.formatDate(post.createdAt)}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                );
+            });
+    }
+
     render(){
-        const { user, postList, isLoading } = this.state;
-        const list = postList.map((post, idx) =>
-            <Card key={`${post.userId}-${idx}`} className="card-container">
-                <CardHeader
-                    title={post.title}
-                    subheader={this.formatDate(post.createdAt)}
-                    action={this.deleteWithPermission(post)}/>
-                <CardMedia
-                    title=""
-                    style={{height: 0, paddingTop: '56.25%'}}
-                    image={post.image}/>
-            </Card>
-        );
+        const { user, isLoading  } = this.state;
         return(
             <div>
                 <AuthUserContext.Consumer>
@@ -153,7 +191,7 @@ class Home extends Component {
                     textColor='#676767'
                     logoSrc={logo}
                     text="Loading data from the cloud">
-                    {list}
+                    { !isLoading && <div>{this.list()}</div> }
                 </LoadingScreen>
             </div>
         );
