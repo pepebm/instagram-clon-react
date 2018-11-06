@@ -1,31 +1,28 @@
-import { db, storage } from '../init';
+import { db } from '../init';
+
+const convertToB64 = (file) => new Promise((resolve, reject) => {
+    let fileReader = new FileReader();
+    fileReader.onload = () => resolve(fileReader.result);
+    fileReader.onerror = err => reject(err);
+    fileReader.readAsDataURL(file);
+});
 
 // Post CRUD
 export const createPost = (id, title, image) => {
     const date = Date.now();
-    const imageName = `${date}-${image.name}`;
     const postName = `${id}-${date}`;
-    const metadata = {
-        contentType: image.type
-    };
-    const uploadTask = storage.child(imageName).put(image, metadata);
-
-    return new Promise((resolve, reject) => {
-        uploadTask.on('state_changed',
-            snapshot => console.log('Upload is ' + (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + '% done'),
-            err => reject(err.message),
-            () => {
-                uploadTask.snapshot.ref.getDownloadURL()
-                    .then((url) => {
-                        db.ref('posts/' + postName).set({
-                            userId: id,
-                            title: title,
-                            image: url,
-                            createdAt: date
-                        });
-                    })
-                    .then(resolve('OK'))
-                    .catch((err) => reject(err.message));
-            });
-    });
+    return new Promise((resolve, reject)=>{
+        convertToB64(image)
+            .then(data =>
+                db.ref('posts/' + postName).set({
+                    userId: id,
+                    title: title,
+                    image: data,
+                    createdAt: date
+                })
+            )
+            .then(snapshot => resolve(snapshot.val()))
+            .catch(err => reject(err));
+    })
+    
 };
