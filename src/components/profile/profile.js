@@ -5,8 +5,8 @@ import AuthUserContext from '../AuthUserContext';
 import withAuthorization from '../withAuthorization';
 import { db } from '../../firebase/init';
 import { userDB } from '../../firebase/index';
-
-
+import EditProfile from './edit-profile/edit-profile';
+import moment from 'moment';
 import { 
     Grid, 
     Typography, 
@@ -20,7 +20,8 @@ import {
     IconButton,
     GridList,
     GridListTile,
-    GridListTileBar
+    GridListTileBar,
+    Avatar
 } from '@material-ui/core';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import LoadingScreen from 'react-loading-screen';
@@ -47,22 +48,16 @@ class Profile extends Component {
         };
     }
 
+    updateUserData = (user) => {
+        if(user !== this.state.user)
+            this.setState(byPropKey('user', user));
+    }
+        
+    
     getArr = data => {
         let arr = [];
         for (const d in data) arr.push(data[d]);
         return arr;
-    }
-
-    formatDate(timestamp) {
-        const date = new Date(timestamp);
-        // Hours part from the timestamp
-        const hours = date.getHours();
-        // Minutes part from the timestamp
-        const minutes = "0" + date.getMinutes();
-        // Seconds part from the timestamp
-        const seconds = "0" + date.getSeconds();
-        // Will display time in 10:30:23 format
-        return `${date.toLocaleDateString()} - ${hours}:${minutes.substr(-2)}:${seconds.substr(-2)}`;
     }
 
     getUserPosts(data, id){
@@ -75,8 +70,8 @@ class Profile extends Component {
                 const d = snapshot.val();
                 const friends = this.getArr(d[id].friends);
                 let friendsArr = [];
-                this.setState(byPropKey('userList', this.getArr(d)));
                 friends.forEach(f => friendsArr.push({uid: f.userId, ...d[f.userId]}));
+                this.setState(byPropKey('userList', this.getArr(d)));
                 this.setState(byPropKey('friendList', friendsArr));
                 this.setState(byPropKey('isLoading', false));
             })
@@ -119,19 +114,19 @@ class Profile extends Component {
             return (
                 <div className="list-cont">
                     <GridList
-                        cellHeight={200}>
+                        cellHeight={180}>
                         {postList.map((p,i) =>
                             <GridListTile key={`post-${i}`}>
                                 <img src={p.image} alt={`Error with post: ${p.title}`}/>
                                 <GridListTileBar
                                     title={p.title}
-                                    subtitle={this.formatDate(p.createdAt)}
+                                    subtitle={moment(p.createdAt).fromNow()}
                                     actionIcon={
                                         <IconButton
+                                            color="primary"
                                             onClick={
                                                 e => this.deletePost(`${p.userId}-${p.createdAt}`)
-                                            }
-                                            color="primary">
+                                            }>
                                             <RemoveCircleOutlineIcon/>
                                         </IconButton>
                                     }/>
@@ -161,21 +156,39 @@ class Profile extends Component {
                                 db.ref().child('posts').on('value',
                                     snapshot => this.getUserPosts(snapshot.val(), authUser.uid)
                                 );
+                                db.ref(`users/${authUser.uid}`).on('child_changed',
+                                    snapshot => this.updateUserData(snapshot.val())
+                                );
                             }
                         }}
                     </AuthUserContext.Consumer>
                     {user && 
-                        <Grid item xs={12} >
-                            <Typography variant="h4" align="center"style={{marginTop: '1rem'}}>
-                                {user.username}
-                            </Typography>
-                            <Typography variant="h4" align="center">
-                                {`${user.firstname} ${user.lastname}`}
-                            </Typography>
-                            <Typography variant="h4" align="center">
-                                {user.email}
-                            </Typography>
-                            <Divider style={{marginTop: '3rem'}}/>
+                        <Grid item xs={12}>
+                            <div className="general-info">
+                                {user.profilePicture ? 
+                                        <Avatar src={user.profilePicture}
+                                            className="center-block" 
+                                            alt=""/>
+                                    :
+                                        <Typography component="p" align="center" style={{marginTop: '1rem'}}>
+                                            No profile picture found!
+                                        </Typography>
+                                }
+                                <Typography variant="h4" align="center" style={{marginTop: '1rem'}}>
+                                    {user.username}
+                                </Typography>
+                                <Typography variant="h4" align="center">
+                                    {`${user.firstname} ${user.lastname}`}
+                                </Typography>
+                                <Typography variant="h4" align="center">
+                                    {user.email}
+                                </Typography>
+                                <Typography variant="h5" align="center">
+                                    {user.description}
+                                </Typography>
+                            </div>
+                            <EditProfile user={user}/>
+                            <Divider style={{marginTop: '2rem'}}/>
                             <Tabs
                                 value={value}
                                 onChange={(e,v) => this.setState(byPropKey('value', v))}

@@ -26,6 +26,7 @@ class Signup extends Component {
             email: '',
             password: '',
             cpassword: '',
+            description: '',
             error: null
         };
     }
@@ -38,6 +39,7 @@ class Signup extends Component {
             username,
             email,
             password,
+            description
         } = this.state;
         const {
             history
@@ -46,7 +48,7 @@ class Signup extends Component {
         auth.createUser(email, password)
             .then(usr => {
                 // Save the user un the real time db
-                userDB.createUserInDatabase(usr.user.uid, name, lastName, username, email)
+                userDB.createUserInDatabase(usr.user.uid, name, lastName, username, email, description, null)
                     .then(history.push(routes.HOME))
                     .catch(err => this.setState(byPropKey('error', err)))
                 ;
@@ -64,6 +66,7 @@ class Signup extends Component {
             password,
             cpassword,
             error,
+            description
         } = this.state;
 
         const isInvalid = password !== cpassword 
@@ -72,8 +75,8 @@ class Signup extends Component {
             || name === ''
             || lastName === ''
             || username === ''
+            || description === ''
         ;
-        
         return(
             <div className='layout'>
                 <CssBaseline/>
@@ -148,7 +151,7 @@ class Signup extends Component {
                             />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="password">Confirm Password</InputLabel>
+                            <InputLabel htmlFor="cpassword">Confirm Password</InputLabel>
                             <Input
                                 name="cpassword"
                                 type="password"
@@ -156,6 +159,18 @@ class Signup extends Component {
                                 value={cpassword}
                                 onChange = {
                                     event => this.setState(byPropKey('cpassword', event.target.value))
+                                }
+                            />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="desc">Tell us something about yourself</InputLabel>
+                            <Input
+                                name="desc"
+                                type="text"
+                                id="desc"
+                                value={description}
+                                onChange = {
+                                    event => this.setState(byPropKey('description', event.target.value))
                                 }
                             />
                         </FormControl>

@@ -17,10 +17,10 @@ const withAuthentication = (Component) => {
         componentDidMount() {
             firebase.auth.onAuthStateChanged(authUser => {
                 if (authUser) {
-                    db.ref(`users/${authUser.uid}`).on(
-                        'value',
-                        snapshot => this.setState({ authUser: {uid: authUser.uid, ...snapshot.val()}}),
-                        (e) => console.log(e));
+                    db.ref(`users/${authUser.uid}`).once('value')
+                        .then(snapshot => 
+                            this.setState({ authUser: {uid: authUser.uid, ...snapshot.val()}})
+                        ).catch((e) => console.log(e));
                 } else {
                     this.setState({authUser: null});
                 }

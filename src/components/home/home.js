@@ -5,6 +5,7 @@ import { db } from '../../firebase/init';
 import AuthUserContext from '../AuthUserContext';
 import logo from '../nav/logo.png';
 
+import moment from 'moment';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -68,46 +69,24 @@ class Home extends Component {
                 let friendsArr = [id];
                 let newArray = [];
                 let friends = f.val().friends;
-                if (friends !== null) {
-                    for (const fr in friends) {
+                if (friends !== null)
+                    for (const fr in friends) 
                         friendsArr.push(friends[fr].userId);
-                    }
-                }
-                for (const p in data) {
+                for (const p in data)
                     newArray.push(data[p]);
-                }
                 newArray = newArray.filter(p => friendsArr.includes(p.userId));
                 this.setState(byPropKey(
                     'postList',
-                    newArray.sort((a, b) => {
-                        a = new Date(a.createdAt);
-                        b = new Date(b.createdAt);
-                        return a > b ? -1 : a < b ? 1 : 0;
-                    })));
-                this.setState(byPropKey('isLoading', false));
+                    newArray.reverse()
+                ));
             },
-            err => {
-                console.log(err)
-                this.setState(byPropKey('isLoading', false));
-            });
+            err => console.log(err));
     }
 
     getArr = data => {
         let arr = [];
         for (const d in data) arr.push({id: d, ...data[d]});
         return arr;
-    }
-
-    formatDate(timestamp) {
-        const date = new Date(timestamp);
-        // Hours part from the timestamp
-        const hours = date.getHours();
-        // Minutes part from the timestamp
-        const minutes = "0" + date.getMinutes();
-        // Seconds part from the timestamp
-        const seconds = "0" + date.getSeconds();
-        // Will display time in 10:30:23 format
-        return `${date.toLocaleDateString()} - ${hours}:${minutes.substr(-2)}:${seconds.substr(-2)}`;
     }
 
     deletePost(id) {
@@ -161,7 +140,7 @@ class Home extends Component {
                             image={post.image}/>
                         <CardContent>
                             <Typography component="p">
-                                {this.formatDate(post.createdAt)}
+                                {moment(post.createdAt).fromNow()}
                             </Typography>
                         </CardContent>
                     </Card>
@@ -178,7 +157,7 @@ class Home extends Component {
                         if (user !== authUser){
                             this.setState(byPropKey('user', authUser));
                             document.title = `Instagram - ${authUser.username} Feed`;
-                            db.ref().child('posts').on('value', 
+                            db.ref().child('posts').orderByChild('createdAt').on('value', 
                                 snapshot => this.renderData(snapshot.val(), authUser.uid)
                             );
                         }

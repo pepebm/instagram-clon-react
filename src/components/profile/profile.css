@@ -2,11 +2,31 @@
     margin-right: 20vw;
     margin-left: 20vw;
     margin-bottom: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    overflow: hidden;
+}
+
+.center-block {
+    display: block !important;
+    margin: 1rem auto !important;
+}
+
+.baseline-icon {
+    margin-bottom: -0.3rem !important;
 }
 
 @media(max-width: 750px) {
     .list-cont {
-        margin-right: 10vw;
-        margin-left: 10vw;
+        margin-right: 0vw;
+        margin-left: 0vw;
+    }
+    .general-info {
+        margin-right: 1rem;
+        margin-left: 1rem;
+    }
+    .general-info h4 {
+        font-size: 1.5em !important;
     }
 }

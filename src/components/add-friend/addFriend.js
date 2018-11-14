@@ -59,9 +59,8 @@ class AddFriend extends Component {
         const { search, userList, user } = this.state;
         let userListArr = Object.keys(userList).map(i => userList[i]);
         return userListArr.filter(u => {
-            if((u.username.toLowerCase().search(search.toLowerCase()) !== -1) 
-                    && (user.username !== u.username))
-                return u;
+            return (u.username.toLowerCase().search(search.toLowerCase()) !== -1) 
+                    && (user.username !== u.username);
         });
     }
 
