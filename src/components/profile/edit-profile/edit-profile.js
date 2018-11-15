@@ -62,7 +62,10 @@ class EditProfile extends Component {
         const { username, firstname, lastname, 
                 description, profilePicture } = this.state;
         userDB.editUserInDatabase(this.props.user.uid, firstname, lastname, username, description, profilePicture)
-            .then(this.setState(byPropKey('open', false)))
+            .then(() => {
+                this.setState(byPropKey('open', false));
+                window.location.reload();
+            })
             .catch(err => this.setState(byPropKey('error', err)));
     }
 
@@ -113,13 +116,6 @@ class EditProfile extends Component {
                                                 e => this.savePic(e.target.files[0])
                                             }/>
                                     </FormControl>
-                                    <Button
-                                        variant="outlined"
-                                        color="secondary"
-                                        size="small"
-                                        style={{marginTop: '1rem'}}>
-                                        Take photo
-                                    </Button>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <FormControl margin="normal" required className="half-size-input">

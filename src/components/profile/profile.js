@@ -29,6 +29,19 @@ import LoadingScreen from 'react-loading-screen';
 
 const byPropKey = (propertyName, value) => () => ({ [propertyName]: value });
 const authCondition = (authUser) => !!authUser;
+const randColor = () => {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++)
+        color += letters[Math.floor(Math.random() * 16)];
+    // All but white
+    return color !== '#FFFFFF' ? color : randColor();
+};
+const avatarStyle = {
+    width: '70px',
+    height: '70px',
+    backgroundColor: randColor()
+};
 const TabContainer = props =>
         <Typography component="div" style={{ padding: 8 * 3 }}>
             {props.children}
@@ -47,12 +60,26 @@ class Profile extends Component {
             userList: []
         };
     }
-
-    updateUserData = (user) => {
-        if(user !== this.state.user)
-            this.setState(byPropKey('user', user));
+    
+    // src: http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
+    isEquivalent(a, b) {
+        // Create arrays of property names
+        if (b === null) b = {};
+        let aProps = Object.getOwnPropertyNames(a);
+        let bProps = Object.getOwnPropertyNames(b);
+        // If number of properties is different,
+        // objects are not equivalent
+        if (aProps.length !== bProps.length) return false;
+        for (let i = 0; i < aProps.length; i++) {
+            let propName = aProps[i];
+            // If values of same property are not equal,
+            // objects are not equivalent
+            if (a[propName] !== b[propName]) return false;
+        }
+        // If we made it this far, objects
+        // are considered equivalent
+        return true;
     }
-        
     
     getArr = data => {
         let arr = [];
@@ -100,8 +127,7 @@ class Profile extends Component {
                                                 <RemoveCircleOutlineIcon/>
                                             </IconButton>
                                         </ListItemSecondaryAction>
-                                    </ListItem>
-                        )}
+                                    </ListItem>)}
                     </List>
                 </div>
             );
@@ -151,13 +177,10 @@ class Profile extends Component {
                 <Grid container>
                     <AuthUserContext.Consumer>
                         {authUser => {
-                            if (user !== authUser) {
-                                this.setState(byPropKey('user', authUser));
+                            if (!this.isEquivalent(authUser, user)) {
+                                this.setState(byPropKey('user', {...authUser}));
                                 db.ref().child('posts').on('value',
                                     snapshot => this.getUserPosts(snapshot.val(), authUser.uid)
-                                );
-                                db.ref(`users/${authUser.uid}`).on('child_changed',
-                                    snapshot => this.updateUserData(snapshot.val())
                                 );
                             }
                         }}
@@ -167,12 +190,13 @@ class Profile extends Component {
                             <div className="general-info">
                                 {user.profilePicture ? 
                                         <Avatar src={user.profilePicture}
-                                            className="center-block" 
+                                            className="center-avatar"
+                                            style={avatarStyle}
                                             alt=""/>
                                     :
-                                        <Typography component="p" align="center" style={{marginTop: '1rem'}}>
-                                            No profile picture found!
-                                        </Typography>
+                                        <Avatar className="center-avatar" style={avatarStyle}>
+                                                {`${user.firstname[0]} ${user.lastname[0]}`}
+                                        </Avatar>
                                 }
                                 <Typography variant="h4" align="center" style={{marginTop: '1rem'}}>
                                     {user.username}

@@ -10,6 +10,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import LockIcon from '@material-ui/icons/Lock';
@@ -119,12 +120,31 @@ class Home extends Component {
         }
     }
 
+    renderAvatar(usr, pic) {
+        if (usr === "") return;
+        let res = "";
+        if (pic === null)
+            res = (
+                <Avatar>
+                    {usr}
+                </Avatar>
+            );
+        else
+            res = (
+                <Avatar src={pic} alt=""/>
+            );
+        return res;
+    }
+
     list() {
         const { postList, userList } = this.state;
         return postList.map((post, idx) => {
-                let usr = "";
+                let usr = "", name = "", profilepic = "";
                 try {
-                    usr =  userList.find(u => u.id === post.userId).username;
+                    usr =  userList.find(u => u.id === post.userId);
+                    name = `${usr.firstname[0]} ${usr.lastname[0]}`;
+                    profilepic = usr.profilePicture;
+                    usr = usr.username;
                 } catch (error) {
                     usr = "Loading username...";
                 }
@@ -133,6 +153,7 @@ class Home extends Component {
                         <CardHeader
                             title={post.title}
                             subheader={usr}
+                            avatar={this.renderAvatar(name, profilepic)}
                             action={this.deleteWithPermission(post)}/>
                         <CardMedia
                             title=""

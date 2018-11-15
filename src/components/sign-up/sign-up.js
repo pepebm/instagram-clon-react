@@ -48,7 +48,7 @@ class Signup extends Component {
         auth.createUser(email, password)
             .then(usr => {
                 // Save the user un the real time db
-                userDB.createUserInDatabase(usr.user.uid, name, lastName, username, email, description, null)
+                userDB.createUserInDatabase(usr.user.uid, name, lastName, username, email, description, " ")
                     .then(history.push(routes.HOME))
                     .catch(err => this.setState(byPropKey('error', err)))
                 ;
