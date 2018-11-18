@@ -120,20 +120,9 @@ class Home extends Component {
         }
     }
 
-    renderAvatar(usr, pic) {
+    renderAvatar = (usr, pic) => {
         if (usr === "") return;
-        let res = "";
-        if (pic === null)
-            res = (
-                <Avatar>
-                    {usr}
-                </Avatar>
-            );
-        else
-            res = (
-                <Avatar src={pic} alt=""/>
-            );
-        return res;
+        return pic === null ? <Avatar>{usr}</Avatar> : <Avatar src={pic} alt=""/>;
     }
 
     list() {
