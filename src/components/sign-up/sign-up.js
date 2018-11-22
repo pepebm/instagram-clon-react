@@ -175,6 +175,7 @@ class Signup extends Component {
                             />
                         </FormControl>
                         <Button
+                            id="submitBtn"
                             type="submit"
                             fullWidth
                             variant="contained"

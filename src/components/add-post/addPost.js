@@ -104,6 +104,7 @@ class AddPost extends Component {
                     disableFocusListener
                     disableTouchListener>
                     <Button
+                        id="addPost"
                         variant="fab" 
                         color="primary" 
                         aria-label="Add post"

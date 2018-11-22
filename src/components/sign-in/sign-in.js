@@ -101,6 +101,7 @@ class Signin extends Component {
                             </Button>
                         </Link>
                         <Button
+                            id="submitBtn"
                             type="submit"
                             fullWidth
                             variant="contained"

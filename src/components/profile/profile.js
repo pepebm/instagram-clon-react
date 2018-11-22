@@ -219,8 +219,8 @@ class Profile extends Component {
                                 indicatorColor="secondary"
                                 textColor="secondary"
                                 centered>
-                                <Tab label="Posts"/>
-                                <Tab label="Friends"/>
+                                <Tab label="Posts" id="tabPost"/>
+                                <Tab label="Friends" id="tabFriend"/>
                             </Tabs>
                             {value === 0 && <TabContainer>{this.gridView()}</TabContainer>}
                             {value === 1 && <TabContainer>{this.friendView()}</TabContainer>}

@@ -74,7 +74,8 @@ class EditProfile extends Component {
                 description, profilePicture, open, error } = this.state;
         return (
             <div>
-                <Button 
+                <Button
+                    id="editProf"
                     variant="outlined" 
                     color="secondary" 
                     className="center-block"

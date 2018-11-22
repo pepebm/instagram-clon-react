@@ -151,6 +151,7 @@ class AddFriend extends Component {
                     disableFocusListener
                     disableTouchListener>
                     <Button
+                        id="addFriend"
                         variant="fab" 
                         color="primary" 
                         aria-label="Follow"
