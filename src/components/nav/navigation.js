@@ -13,7 +13,7 @@ import './navigation.css';
 import { auth } from '../../firebase/index';
 import logo from './logo.png';
 
-const NavigationAuth = ({ authUser }) =>
+export const NavigationAuth = ({ authUser }) =>
     <AppBar position="sticky">
         <Toolbar>
             <Typography variant="h5" className='grow nav-title'>
@@ -35,7 +35,7 @@ const NavigationAuth = ({ authUser }) =>
         </Toolbar>
     </AppBar>
 
-const NavigationNonAuth = () =>
+export const NavigationNonAuth = () =>
     <AppBar position="static">
         <Toolbar>
             <Typography variant="h5" color="textPrimary" className='grow nav-title'>

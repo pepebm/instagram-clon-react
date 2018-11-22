@@ -95,8 +95,7 @@ class Signin extends Component {
                         </FormControl>
                         <Link to={routes.SIGN_UP} >
                             <Button
-                                color="error"
-                                className="new-account" >
+                                className="new-account">
                                 <FiberNewIcon/> Create account
                             </Button>
                         </Link>
