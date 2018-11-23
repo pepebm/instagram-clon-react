@@ -3,6 +3,8 @@ from faker.providers import address, internet, job
 from selenium import webdriver
 from enum import Enum
 from time import sleep
+from rand import randint
+import pry
 
 # GLOBALS
 baseUrl = 'https://instagraminreact.herokuapp.com'
@@ -10,7 +12,7 @@ fake = Faker()
 fake.add_provider(address)
 fake.add_provider(internet)
 fake.add_provider(job)
-fake.seed_instance(4521)
+fake.seed_instance(randint())
 
 class DummyUser(Enum):
     firstname   = fake.first_name()
@@ -39,6 +41,7 @@ def createUser():
     browser.find_element_by_id('cpassword').send_keys(DummyUser.cpassword.value)
     browser.find_element_by_id('desc').send_keys(DummyUser.password.value)
     browser.find_element_by_id('submitBtn').click()
+    pry()
     sleep(1.5)
     if browser.current_url is baseUrl:
         print('TEST createUser ----- [OK]')
